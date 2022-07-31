@@ -75,7 +75,7 @@ public class MyServer {
 		}
 		
 	}
-
+	public void testRequestASyncChannel() {}
 	private void log(String msg) {
 		System.out.println(msg);
 		

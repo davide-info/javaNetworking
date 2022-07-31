@@ -126,7 +126,7 @@ public class MyClient {
 		attachment.buffer.flip();
 		ReadWriteHandler readWriteHandler = new ReadWriteHandler();
 		socketChannel.write(attachment.buffer, attachment, readWriteHandler);
-		log("Scrittura socket");
+		log("Scrittura socket 2");
 		attachment.mainThread.join(); 
 		
 		} catch (Exception e) {
