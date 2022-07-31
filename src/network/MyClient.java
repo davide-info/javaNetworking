@@ -9,10 +9,15 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 import java.time.LocalTime;
+import java.util.concurrent.Future;
 
 
 public class MyClient {
@@ -92,6 +97,61 @@ public class MyClient {
 			}
 		}
 		return result.toString();
+		
+	}
+	static class Attachment {
+		AsynchronousSocketChannel channel;
+		ByteBuffer buffer ;
+		Thread mainThread ;
+		boolean isRead ;
+	}
+	
+	public void requestASyncChannel(String fileName) {
+		try(AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open()) {
+			String serverName = "localhost";
+			int serverPort = 2000 ;
+			SocketAddress serverAddr = new InetSocketAddress(serverName,serverPort);
+			Future<Void> result = socketChannel.connect(serverAddr);
+		log("Connessione al server") ;
+		result.get();
+		Attachment attachment = new Attachment();
+		attachment.channel = socketChannel;
+		attachment.buffer = ByteBuffer.allocate(2048) ;
+		attachment.isRead = false ;
+		attachment.mainThread = Thread.currentThread();
+		Charset cs = Charset.forName("UTF-8");
+		String msg = LocalTime.now().toString() ;
+		byte [] data = msg.getBytes(cs);
+		attachment.buffer.put(data);
+		attachment.buffer.flip();
+		ReadWriteHandler readWriteHandler = new ReadWriteHandler();
+		socketChannel.write(attachment.buffer, attachment, readWriteHandler);
+		attachment.mainThread.join();
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	private void log(String msg) {
+		System.out.println(msg);
+		
+	}
+	class ReadWriteHandler implements CompletionHandler<Integer,Attachment>{
+
+		@Override
+		public void completed(Integer result, Attachment attachment) {
+			
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void failed(Throwable exc, Attachment attachment) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 	
