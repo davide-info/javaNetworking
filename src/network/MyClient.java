@@ -35,14 +35,14 @@ public class MyClient {
 	
 	}
 	public void requestAsync(String fileName) {
-		SocketChannel channel= null;
+	
 		InetSocketAddress socket=null;
-		try	{
+		
 		
 		socket = new InetSocketAddress("localhost",2000); 
 		
 			
-			channel = SocketChannel.open(socket);
+			try(SocketChannel channel = SocketChannel.open(socket)) {
 			String content = getHtmlPageFromURl(fileName);
 			System.out.println("CONTENUTO " + content);
 			byte [] byteMsg = content.getBytes();
@@ -55,6 +55,7 @@ public class MyClient {
 			Thread.sleep(2000);
 			
 			 
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
