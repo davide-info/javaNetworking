@@ -126,7 +126,7 @@ public class MyClient {
 		attachment.buffer.flip();
 		ReadWriteHandler readWriteHandler = new ReadWriteHandler();
 		socketChannel.write(attachment.buffer, attachment, readWriteHandler);
-		attachment.mainThread.join();
+		attachment.mainThread.join(); 
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
