@@ -56,16 +56,19 @@ public class MyServer {
 	
 	public void testRequestAsync() {
 		try(ServerSocketChannel serverSocket = ServerSocketChannel.open()) {
+			log("Server opened ");
 			SocketChannel client = null;
 			serverSocket.bind(new InetSocketAddress(2000));
 			client = serverSocket.accept();
+			log("client accepted in the port " + client.socket().getPort()+ " Server port " + client.socket().getLocalPort());
 			ByteBuffer buffer = ByteBuffer.allocate(1024);
+			StringBuilder builder = new StringBuilder();
 			while(client.read(buffer)>0) {
 				buffer.flip();
-				System.out.println(new String(buffer.array()));
+				builder.append(new String(buffer.array(),0, buffer.remaining())+"\n");
 				buffer.clear();
 			}
-			
+			log("RICEVUTO SERVER "+builder);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

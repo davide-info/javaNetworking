@@ -6,7 +6,7 @@ public class TestClient {
 
 	public static void main(String[] args) {
 		MyClient mc = new MyClient();
-		final String url="http://mail.google.com/mail/u/0/";
+		final String url="https://www.youtube.com/watch?v=kUug01HEW94/";
 		mc.requestAsync(url);
 		System.out.println("TERMINATO");
 
