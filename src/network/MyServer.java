@@ -1,4 +1,4 @@
-package network1;
+package network;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -55,66 +55,21 @@ public class MyServer {
 	}
 	
 	public void testRequestAsync() {
-		
-		try(Selector selector = Selector.open()){
-			try(	ServerSocketChannel crunchifySocket = ServerSocketChannel.open()){
-				InetSocketAddress crunchifyAddr = new InetSocketAddress("localhost", 2000);
-				crunchifySocket.bind(crunchifyAddr);
-				crunchifySocket.configureBlocking(false);
-				 
-				int ops = crunchifySocket.validOps();
-				while(true) {
-					log("I'm a server and I'm waiting for new connection and buffer select...");
-					selector.select();
-					Set<SelectionKey> crunchifyKeys = selector.selectedKeys();
-					System.out.println("KEYS " + crunchifyKeys.size());
-					Iterator<SelectionKey> crunchifyIterator = crunchifyKeys.iterator();
-		 
-					while (crunchifyIterator.hasNext()) {
-						
-						SelectionKey myKey = crunchifyIterator.next();
-						
-		 
-						// Tests whether this key's channel is ready to accept a new socket connection
-						if (myKey.isAcceptable()) {
-							SocketChannel crunchifyClient = crunchifySocket.accept();
-		 
-							// Adjusts this channel's blocking mode to false
-							crunchifyClient.configureBlocking(false);
-		 
-							// Operation-set bit for read operations
-							crunchifyClient.register(selector, SelectionKey.OP_READ);
-							log("Connection Accepted: " + crunchifyClient.getLocalAddress() + "\n");
-		 
-							// Tests whether this key's channel is ready for reading
-						} else if (myKey.isReadable()) {
-							
-							SocketChannel crunchifyClient = (SocketChannel) myKey.channel();
-							
-							// ByteBuffer: A byte buffer.
-							// This class defines six categories of operations upon byte buffers:
-							// Absolute and relative get and put methods that read and write single bytes;
-							// Absolute and relative bulk get methods that transfer contiguous sequences of bytes from this buffer into an array;
-							ByteBuffer crunchifyBuffer = ByteBuffer.allocate(256);
-							crunchifyClient.read(crunchifyBuffer);
-							String result = new String(crunchifyBuffer.array()).trim();
-		 
-							log("Message received: " + result);
-		 
-							if (result.isEmpty()) {
-								crunchifyClient.close();
-								log("\nIt's time to close connection as we got last company name 'Crunchify'");
-								log("\nServer will keep running. Try running client again to establish new connection");
-							}
-						}
-						crunchifyIterator.remove();
-					}
-				}
-				}
-				
-			}catch(IOException e) {}
-		
+		try(ServerSocketChannel serverSocket = ServerSocketChannel.open()) {
+			SocketChannel client = null;
+			serverSocket.bind(new InetSocketAddress(2000));
+			client = serverSocket.accept();
+			ByteBuffer buffer = ByteBuffer.allocate(1024);
+			while(client.read(buffer)>0) {
+				buffer.flip();
+				System.out.println(new String(buffer.array()));
+				buffer.clear();
+			}
 			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
