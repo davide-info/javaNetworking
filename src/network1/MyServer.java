@@ -27,6 +27,7 @@ public class MyServer {
 			 System.out.println("SOCKET "+socket);
 			 System.out.println("SOCKET CLOSED " + socket.isClosed());
 			 System.out.println("SERVSOCK "+ servSock.isClosed());
+			 
 		
 			 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -43,8 +44,7 @@ public class MyServer {
 			 
 			 System.out.println("LINESTR "+lineStr);
 			 } catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("ECCEZIONE " + e);
 				}
 		finally {
 			

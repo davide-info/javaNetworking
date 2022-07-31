@@ -17,9 +17,9 @@ import java.time.LocalTime;
 
 public class MyClient {
 	public void request(String fileName) {
-		Socket socket=null;
-		try {
-		 socket = new Socket("localhost",2000);
+		
+		try(Socket  socket = new Socket("localhost",2000)) {
+		
 		// socket.connect(InetSocketAddress.createUnresolved("localhost", 3000));
 		 
 
